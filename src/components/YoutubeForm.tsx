@@ -42,6 +42,7 @@ const YoutubeForm = () => {
     watch,
     getValues,
     setValue,
+    reset,
   } = form;
 
   const {
@@ -92,12 +93,18 @@ const YoutubeForm = () => {
     });
   };
 
+  // useEffect(() => {
+  //   const subscription = watch((value) => {
+  //     console.log(value);
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [watch]);
+
   useEffect(() => {
-    const subscription = watch((value) => {
-      console.log(value);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <div>
@@ -250,6 +257,10 @@ const YoutubeForm = () => {
         </div>
 
         <button disabled={!isDirty || !isValid}>Submit</button>
+        <button type="button" onClick={() => reset()}>
+          {" "}
+          Reset
+        </button>
         <button type="button" onClick={handleGetValues}>
           Get values
         </button>
