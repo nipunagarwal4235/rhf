@@ -44,6 +44,7 @@ const YoutubeForm = () => {
     getValues,
     setValue,
     reset,
+    trigger,
   } = form;
 
   const {
@@ -274,6 +275,10 @@ const YoutubeForm = () => {
         </button>
         <button type="button" onClick={handleSetValue}>
           Set values
+        </button>
+        <button type="button" onClick={() => trigger("email")}>
+          {" "}
+          Trigger
         </button>
       </form>
       <DevTool control={control} />
