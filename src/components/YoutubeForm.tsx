@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FieldErrors } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 
 type FormData = {
@@ -44,9 +44,9 @@ const YoutubeForm = () => {
     setValue,
   } = form;
 
-  const { errors, touchedFields, dirtyFields, isDirty } = formState;
+  const { errors, touchedFields, dirtyFields, isDirty, isValid } = formState;
 
-  console.log({ touchedFields, dirtyFields, isDirty });
+  console.log({ touchedFields, dirtyFields, isDirty, isValid });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -55,6 +55,10 @@ const YoutubeForm = () => {
 
   const onSubmit = (data: FormData) => {
     console.log(data);
+  };
+
+  const onError = (errors: FieldErrors<FormData>) => {
+    console.log(errors);
   };
 
   const handleGetValues = () => {
@@ -79,7 +83,7 @@ const YoutubeForm = () => {
   return (
     <div>
       <h1>YouTube Form</h1>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
         <div className="form-control">
           <label htmlFor="username">Username</label>
           <input
@@ -136,7 +140,14 @@ const YoutubeForm = () => {
 
         <div className="form-control">
           <label htmlFor="twitter">Twitter</label>
-          <input type="text" id="twitter" {...register("social.twitter")} />
+          <input
+            type="text"
+            id="twitter"
+            {...register("social.twitter", {
+              disabled: watch("channel") === "",
+              required: "Twitter is required",
+            })}
+          />
         </div>
 
         <div className="form-control">
@@ -219,7 +230,7 @@ const YoutubeForm = () => {
           <p className="error">{errors.dob?.message}</p>
         </div>
 
-        <button>Submit</button>
+        <button disabled={!isDirty || !isValid}>Submit</button>
         <button type="button" onClick={handleGetValues}>
           Get values
         </button>
